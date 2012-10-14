@@ -46,7 +46,8 @@ module Xapit
       # TODO refactor with stemmed_text_terms
       def text_terms
         each_attribute(:text) do |name, value, options|
-          value = value.to_s.split(/\s+/u).map { |w| w.gsub(/[^\w]/u, "") } unless value.kind_of? Array
+          # value = value.to_s.split(/\s+/u).map { |w| w.gsub(/[^\w]/u, "") } unless value.kind_of? Array
+          value = value.to_s.split(/\s+/u) unless value.kind_of? Array
           value.map(&:to_s).map(&:downcase).map do |term|
             [term, options[:weight] || 1] unless term.empty?
           end
@@ -57,7 +58,8 @@ module Xapit
       def stemmed_text_terms
         if stemmer
           each_attribute(:text) do |name, value, options|
-            value = value.to_s.split(/\s+/u).map { |w| w.gsub(/[^\w]/u, "") } unless value.kind_of? Array
+            # value = value.to_s.split(/\s+/u).map { |w| w.gsub(/[^\w]/u, "") } unless value.kind_of? Array
+            value = value.to_s.split(/\s+/u) unless value.kind_of? Array
             value.map(&:to_s).map(&:downcase).map do |term|
               ["Z#{stemmer.call(term)}", options[:weight] || 1] unless term.empty?
             end
