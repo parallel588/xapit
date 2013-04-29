@@ -10,7 +10,8 @@ namespace :xapit do
     models = ActiveRecord::Base.subclasses
     Dir[Rails.root.join("app", "models", "**", "*.rb")].each do |file|
       # I hate to rescue nil, maybe there's a better way to handle unknown constants
-      models << File.basename(file, ".*").classify.constantize rescue nil
+      file = file.gsub(Rails.root.join("app", "models").to_s+'/', '').gsub(/\.rb\Z/, '')
+      models << file.classify.constantize rescue nil
     end
     xapit_models = models.compact.uniq.select { |m| m.respond_to? :xapit_model_adapter }
     Xapit.index(*xapit_models)
